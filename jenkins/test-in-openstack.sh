@@ -52,6 +52,13 @@ EOF
     ssh root@$instance for i in /var/cache/rsnapshot/*.conf \; do /usr/bin/rsnapshot -c \$i daily \; done || return 3
     ssh root@$instance /usr/lib/nagios/plugins/check_rsnapshot TEST || return 4
     ssh root@$instance /usr/lib/nagios/plugins/check_rsnapshot || return 5
+    ssh root@$instance <<'EOF' || return 6
+set -xe
+cd /var/cache/rsnapshot/rsnapshot.novalocal/daily.0
+test -d etc/init.d
+! test -f etc/passwd
+! test -f etc/group
+EOF
     #
     # teardown
     #
