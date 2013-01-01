@@ -36,7 +36,7 @@ class rsnapshot::server (
     ensure => installed
   }
 
-  file { "/root/.ssh/rsnaphost_key":
+  file { "/root/.ssh/rsnapshot_key":
       ensure => present, mode => 0600,
       owner => root, group => root,
       source => 'puppet:///rsnapshot/rsnapshot_key';
