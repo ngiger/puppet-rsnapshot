@@ -23,7 +23,7 @@ class rsnapshot::puppetmaster {
   }
 
   exec { 'create_key':
-    command => 'ssh-keygen -N "" -f /etc/puppet/modules/rsnapshot/files/rsnapshot_key ; chown puppet /etc/puppet/modules/rsnapshot/files/rsnapshot_key*',
+    command => '/usr/bin/ssh-keygen -N "" -f /etc/puppet/modules/rsnapshot/files/rsnapshot_key ; chown puppet /etc/puppet/modules/rsnapshot/files/rsnapshot_key*',
     creates => '/etc/puppet/modules/rsnapshot/files/rsnapshot_key',
     require => File['/etc/puppet/modules/rsnapshot/files'],
   }
