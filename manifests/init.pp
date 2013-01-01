@@ -55,10 +55,10 @@ class rsnapshot::server (
   file {
     "/var/run/rsnapshot/":
       ensure => directory,
-      mode => '0755', owner => root, group => root,
+      mode => '0755', owner => root, group => root;
     "/var/log/rsnapshot/":
       ensure => directory,
-      mode => '0755', owner => root, group => root,
+      mode => '0755', owner => root, group => root;
   }
 }
 
@@ -72,6 +72,7 @@ class rsnapshot::client (
     ensure => present,
     mode => '0444', owner => root, group => root,
     content => template('rsnapshot/rsnapshot.conf.erb'),
+    require => Package['rsnapshot'],
     tag => 'rsnapshot',
   }
 }

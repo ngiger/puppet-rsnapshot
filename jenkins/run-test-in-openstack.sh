@@ -210,6 +210,7 @@ cd /etc/puppet/modules/"$directory"
 git pull
 EOF
     fi
+    ssh root@${PUPPETMASTER[instance]} rm -f /var/lib/puppet/server_data/storeconfigs.sqlite    
     ssh root@${PUPPETMASTER[instance]} /etc/init.d/puppetmaster restart
     sleep 5 # give the puppet master time to restart. should wait in a more predicatable way.
     ssh root@${PUPPETMASTER[instance]} puppet agent -vt | sed --unbuffered -e 's/^/puppetmaster: /' -e '/Finished catalog run/q'
