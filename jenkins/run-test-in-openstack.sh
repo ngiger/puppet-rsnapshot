@@ -110,6 +110,7 @@ function create_puppetmaster() {
 }
 
 function install_cloud_clients() {
+    DEBIAN_FRONTEND=noninteractive apt-get update -o Acquire::Pdiffs=false
     DEBIAN_FRONTEND=noninteractive apt-get install -qy python-novaclient euca2ools glance-common nmap
 }
 
