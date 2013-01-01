@@ -168,10 +168,8 @@ EOF
     else
 	ssh  -o 'StrictHostKeyChecking=false' root@${PUPPETMASTER[instance]} <<EOF
 set -xe
-cd /srv/"$directory"
+cd /etc/puppet/modules/"$directory"
 git pull
-git submodule init
-git submodule update
 EOF
     fi
     ssh root@${PUPPETMASTER[instance]} /etc/init.d/puppetmaster restart
