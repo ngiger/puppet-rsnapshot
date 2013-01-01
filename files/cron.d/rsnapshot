@@ -1,0 +1,7 @@
+#
+# DO NOT CHANGE : IT WILL BE OVERRIDEN BY PUPPET ON THE NEXT RUN
+# GENERATED FROM puppet.the.re:/etc/puppet/modules/puppet-rsnapshot/files/cron.d/rsnapshot
+#
+30 3          * * *           root    for i in /var/cache/rsnapshot/*.conf ; do /usr/bin/rsnapshot -c $i daily ; done
+0  3          * * 1           root    for i in /var/cache/rsnapshot/*.conf ; do /usr/bin/rsnapshot -c $i weekly ; done
+30 2          1 * *           root    for i in /var/cache/rsnapshot/*.conf ; do /usr/bin/rsnapshot -c $i monthly ; done

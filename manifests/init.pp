@@ -43,6 +43,13 @@ class rsnapshot::server (
     require => Package['rsnapshot'],
   }
 
+  file { "/etc/cron.d/rsnapshot",
+    ensure => present, mode => 0444,
+    owner => root, group => root,
+    source => 'puppet:///rsnapshot/cron.d/rsnapshot';    
+    require => Package['rsnapshot'],
+  }
+
   file { "/root/.ssh/rsnapshot_key":
     ensure => present, mode => 0400,
     owner => root, group => root,
@@ -53,7 +60,7 @@ class rsnapshot::server (
   
   @@file_line { 'rsnapshot_public_key':
     path => '/root/.ssh/authorized_keys',
-    line => "from=\"127.0.0.1,$ip\",command=\"echo \\\"\$SSH_ORIGINAL_COMMAND\\\" | grep --quiet '^rsync --server --sender' && \$SSH_ORIGINAL_COMMAND\" $public_key",
+    line => "from=\"127.0.0.1,$ip\",command=\"echo \\\"\$SSH_ORIGINAL_COMMAND\\\" | grep --quiet '^rsync --server --sender' && ionice -c3 \$SSH_ORIGINAL_COMMAND\" $public_key",
     tag => 'rsnapshot',
   }
 
