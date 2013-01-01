@@ -146,6 +146,7 @@ function run() {
 	ssh root@${PUPPETMASTER[instance]} rm -fr /etc/puppet/modules/"$directory" 
 	ssh root@${PUPPETMASTER[instance]} git clone "$git" /etc/puppet/modules/"$directory"
 	ssh root@${PUPPETMASTER[instance]} echo "'DAEMON_OPTS=\"--autosign true\"'" \>\> /etc/default/puppetmaster
+        ssh root@${PUPPETMASTER[instance]} puppet module install --version=2.6.0 puppetlabs-stdlib
 	ssh root@${PUPPETMASTER[instance]} /etc/init.d/puppetmaster restart
 	while ! ssh root@${PUPPETMASTER[instance]} /etc/init.d/puppetmaster status ; do sleep 1 ; done
 	ssh root@${PUPPETMASTER[instance]} apt-get install -y rubygems
