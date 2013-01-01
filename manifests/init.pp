@@ -1,41 +1,56 @@
-# == Class: rsnapshot
 #
-# Full description of class rsnapshot here.
+# Copyright (C) 2013 Loic Dachary <loic@dachary.org>
 #
-# === Parameters
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# Document parameters here.
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
 #
-# [*sample_parameter*]
-#   Explanation of what this parameter affects and what it defaults to.
-#   e.g. "Specify one or more upstream ntp servers as an array."
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# === Variables
-#
-# Here you should define a list of variables that this module would require.
-#
-# [*sample_variable*]
-#   Explanation of how this variable affects the funtion of this class and if it
-#   has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#   External Node Classifier as a comma separated list of hostnames." (Note,
-#   global variables should not be used in preference to class parameters  as of
-#   Puppet 2.6.)
-#
-# === Examples
-#
-#  class { rsnapshot:
-#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ]
-#  }
-#
-# === Authors
-#
-# Author Name <author@domain.com>
-#
-# === Copyright
-#
-# Copyright 2011 Your name here, unless otherwise noted.
-#
-class rsnapshot {
 
+class rsnapshot::puppetmaster {
+  file {
+    "/etc/puppet/modules/rsnapshot/files":
+      ensure => directory, mode => 0700,
+      owner => puppet, group => nogroup,
+  }
 
+  exec { 'create_key':
+    command => 'ssh-keygen -N "" -f /etc/puppet/modules/rsnapshot/files/rsnapshot_key ; chown puppet /etc/puppet/modules/rsnapshot/files/rsnapshot_key*',
+    creates => '/etc/puppet/modules/rsnapshot/files/rsnapshot_key',
+    require => File['/etc/puppet/modules/rsnapshot/files'],
+  }
+}
+
+class rsnapshot::server (
+  $ip = $::ipaddress,
+  ) {
+  package { 'rsnapshot':
+    ensure => installed
+  }
+
+  file { "/root/.ssh/rsnaphost_key":
+      ensure => present, mode => 0600,
+      owner => root, group => root,
+      source => 'puppet:///rsnapshot/rsnapshot_key';
+  }
+
+  $public_key = file('puppet:///rsnapshot/rsnapshot_key.pub')
+  
+  @@file_line { 'rsnapshot_public_key':
+    path => '/root/.ssh/authorized_keys',
+    line => "from=\"$ip\" command=\"echo \\\"\$SSH_ORIGINAL_COMMAND\\\" | grep --quiet '^rsync --server --sender' && \$SSH_ORIGINAL_COMMAND\" $public_key",
+    tag => 'rsnapshot',
+  }
+}
+
+class rsnapshot::client {
+ File_line <<| tag == 'rsnapshot' |>> 
 }
