@@ -28,12 +28,12 @@ set -x
 
 cat > /etc/puppet/manifests/site.pp <<'INNER_EOF'
 node '$instance.novalocal' {
-  include rsnapshot::server
-  include rsnapshot::client
+  class { 'rsnapshot::server': }
+  class { 'rsnapshot::client': }
 }
 
 node 'puppet.novalocal' {
-  include rsnapshot::puppetmaster
+  class { 'rsnapshot::puppetmaster': }
 }
 INNER_EOF
 
