@@ -36,14 +36,14 @@ class rsnapshot::server (
     ensure => installed
   }
 
-  file { "/etc/logrotate.d/rsnapshot",
+  file { "/etc/logrotate.d/rsnapshot":
     ensure => present, mode => 0444,
     owner => root, group => root,
     source => 'puppet:///rsnapshot/logrotate.d/rsnapshot';    
     require => Package['rsnapshot'],
   }
 
-  file { "/etc/cron.d/rsnapshot",
+  file { "/etc/cron.d/rsnapshot":
     ensure => present, mode => 0444,
     owner => root, group => root,
     source => 'puppet:///rsnapshot/cron.d/rsnapshot';    
