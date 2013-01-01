@@ -29,7 +29,9 @@ set -x
 cat > /etc/puppet/manifests/site.pp <<'INNER_EOF'
 node '$instance.novalocal' {
   class { 'rsnapshot::server': }
-  class { 'rsnapshot::client': }
+  class { 'rsnapshot::client': 
+     excludes => [ '/etc/passwd', '/etc/group' ],
+  }
   class { 'rsnapshot::nagios': }
 }
 

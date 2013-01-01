@@ -167,6 +167,10 @@ ssh_args	-i /root/.ssh/rsnapshot_key -o StrictHostKeyChecking=false
 exclude	/proc
 exclude	/sys
 exclude	/var/cache/rsnapshot
+<% excludes.each do |exclude| -%>
+exclude	<%= exclude -%>
+<% end -%>
+
 
 # The include_file and exclude_file parameters, if enabled, simply get
 # passed directly to rsync. Please look up the --include-from and
