@@ -47,7 +47,9 @@ EOF
     ssh -o 'StrictHostKeyChecking=false' root@$instance tail -f /var/log/daemon.log | sed --unbuffered -e "s/^/$instance: /" -e '/Finished catalog run/q' 
 
     ssh root@$instance test -f /etc/rsnapshot.conf || return 2
-
+    ssh root@$instance for i in /var/cache/rsnapshot/*.conf \; do /usr/bin/rsnapshot -c \$i daily \; done || return 3
+    ssh root@$instance /usr/lib/nagios/plugins/check_rsnapshot TEST || return 4
+    ssh root@$instance /usr/lib/nagios/plugins/check_rsnapshot || return 5
     #
     # teardown
     #
