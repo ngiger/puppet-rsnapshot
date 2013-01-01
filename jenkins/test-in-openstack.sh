@@ -38,6 +38,8 @@ node 'puppet.novalocal' {
 INNER_EOF
 
 EOF
+    ssh root@puppet rm -f '/etc/puppet/modules/rsnapshot/files/rsnapshot_key*'
+    ssh root@puppet puppet agent -vt | sed --unbuffered -e 's/^/puppetmaster: /' -e '/Finished catalog run/q'
     instance_delete $instance
     instance_run $instance puppet e.1-cpu.10GB-disk.512MB-ram || return 1
     while ! nmap $instance -PN -p ssh | grep open ; do sleep 1 ; done
