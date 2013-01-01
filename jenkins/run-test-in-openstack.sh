@@ -147,6 +147,43 @@ function run() {
 	ssh root@${PUPPETMASTER[instance]} git clone "$git" /etc/puppet/modules/"$directory"
 	ssh root@${PUPPETMASTER[instance]} echo "'DAEMON_OPTS=\"--autosign true\"'" \>\> /etc/default/puppetmaster
         ssh root@${PUPPETMASTER[instance]} puppet module install --version=2.6.0 puppetlabs-stdlib
+        ssh root@${PUPPETMASTER[instance]} <<'EOF'
+cat > /etc/puppet/puppet.conf <<'INNER_EOF'
+logdir=/var/log/puppet
+vardir=/var/lib/puppet
+ssldir=/var/lib/puppet/ssl
+rundir=/var/run/puppet
+factpath=$vardir/lib/facter
+templatedir=$confdir/templates
+prerun_command=/etc/puppet/etckeeper-commit-pre
+postrun_command=/etc/puppet/etckeeper-commit-post
+
+[master]
+# These are needed when the puppetmaster is run by passenger                                               
+# and can safely be removed if webrick is used.                                                            
+ssl_client_header = SSL_CLIENT_S_DN
+ssl_client_verify_header = SSL_CLIENT_VERIFY
+
+storeconfigs=true
+dbadapter=sqlite3
+dblocation=/var/lib/puppet/server_data/storeconfigs.sqlite
+[agent]                                                                                                    
+pluginsync=true
+INNER_EOF
+EOF
+
+        ssh root@${PUPPETMASTER[instance]} <<'EOF'
+cat > /etc/puppet/fileserver.conf <<'INNER_EOF'
+[files]
+  path /etc/puppet/files
+  allow *
+[modules]
+  allow *
+[plugins]
+  allow *
+INNER_EOF
+EOF
+
 	ssh root@${PUPPETMASTER[instance]} /etc/init.d/puppetmaster restart
 	while ! ssh root@${PUPPETMASTER[instance]} /etc/init.d/puppetmaster status ; do sleep 1 ; done
 	ssh root@${PUPPETMASTER[instance]} apt-get install -y rubygems

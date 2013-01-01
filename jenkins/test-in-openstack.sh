@@ -22,15 +22,17 @@ function run_test() {
     #
     ssh root@puppet <<EOF
 set -x
-cat > /etc/puppet/manifests/rsnapshot.pp <<INNEREOF
-node $instance.novalocal {
+
+cat > /etc/puppet/manifests/site.pp <<'INNER_EOF'
+node '$instance.novalocal' {
   include rsnapshot::server
   include rsnapshot::host
 }
-INNEREOF
-if ! grep rsnapshot /etc/puppet/manifests/site.pp ; then
-  echo 'import "rsnapshot"' >> /etc/puppet/manifests/site.pp
-fi
+
+node 'puppet.novalocal' {
+  include rsnapshot::puppetmaster
+}
+INNER_EOF
 
 EOF
     instance_delete $instance
