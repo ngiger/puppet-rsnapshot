@@ -36,10 +36,17 @@ class rsnapshot::server (
     ensure => installed
   }
 
+  file { "/etc/logrotate.d/rsnapshot",
+    ensure => present, mode => 0444,
+    owner => root, group => root,
+    source => 'puppet:///rsnapshot/logrotate.d/rsnapshot';    
+    require => Package['rsnapshot'],
+  }
+
   file { "/root/.ssh/rsnapshot_key":
-      ensure => present, mode => 0600,
-      owner => root, group => root,
-      source => 'puppet:///rsnapshot/rsnapshot_key';
+    ensure => present, mode => 0400,
+    owner => root, group => root,
+    source => 'puppet:///rsnapshot/rsnapshot_key';
   }
 
   $public_key = file('/etc/puppet/modules/rsnapshot/files/rsnapshot_key.pub')

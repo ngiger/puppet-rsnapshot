@@ -1,0 +1,10 @@
+#
+# DO NOT CHANGE : IT WILL BE OVERRIDEN BY PUPPET ON THE NEXT RUN
+# GENERATED FROM puppet.the.re:/etc/puppet/modules/puppet-rsnapshot/files/logrotate.d/rsnapshot
+#
+/var/log/rsnapshot/* {
+        rotate 6
+        monthly
+        compress
+        missingok
+}
