@@ -26,7 +26,7 @@ set -x
 cat > /etc/puppet/manifests/site.pp <<'INNER_EOF'
 node '$instance.novalocal' {
   include rsnapshot::server
-  include rsnapshot::host
+  include rsnapshot::client
 }
 
 node 'puppet.novalocal' {

@@ -42,15 +42,27 @@ class rsnapshot::server (
       source => 'puppet:///rsnapshot/rsnapshot_key';
   }
 
-  $public_key = file('puppet:///rsnapshot/rsnapshot_key.pub')
+  $public_key = file('/etc/puppet/modules/rsnapshot/files/rsnapshot_key.pub')
   
   @@file_line { 'rsnapshot_public_key':
     path => '/root/.ssh/authorized_keys',
-    line => "from=\"$ip\" command=\"echo \\\"\$SSH_ORIGINAL_COMMAND\\\" | grep --quiet '^rsync --server --sender' && \$SSH_ORIGINAL_COMMAND\" $public_key",
+    line => "from=\"127.0.0.1,$ip\",command=\"echo \\\"\$SSH_ORIGINAL_COMMAND\\\" | grep --quiet '^rsync --server --sender' && \$SSH_ORIGINAL_COMMAND\" $public_key",
     tag => 'rsnapshot',
   }
+
+  File <<| tag == 'rsnapshot' |>>
 }
 
-class rsnapshot::client {
- File_line <<| tag == 'rsnapshot' |>> 
+class rsnapshot::client (
+  $excludes = [],
+  ) {
+  
+  File_line <<| tag == 'rsnapshot' |>>
+
+  @@file { "/var/cache/rsnapshot/${::fqdn}.conf":
+    ensure => present,
+    mode => '0444', owner => root, group => root,
+    content => template('templates/rsnapshot/rsnapshot.conf.erb'),
+    tag => 'rsnapshot',
+  }
 }
