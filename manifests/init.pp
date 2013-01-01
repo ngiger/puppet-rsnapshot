@@ -30,10 +30,17 @@ class rsnapshot::puppetmaster {
 }
 
 class rsnapshot::nagios {
-  file { "/usr/lib/nagios/plugins/check_rsnapshot":
-    ensure => present, mode => 0555,
-    owner => root, group => root,
-    source => 'puppet:///rsnapshot/check_rsnapshot',
+  file {
+    "/usr/lib/nagios":
+      ensure => directory, mode => 0755,
+      owner => root, group => root;
+    "/usr/lib/nagios/plugins":
+      ensure => directory, mode => 0755,
+      owner => root, group => root;
+    "/usr/lib/nagios/plugins/check_rsnapshot":
+      ensure => present, mode => 0555,
+      owner => root, group => root,
+      source => 'puppet:///rsnapshot/check_rsnapshot';
   }
 }
 
