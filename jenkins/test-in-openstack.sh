@@ -16,6 +16,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 function run_test() {
+    local module=rsnapshot
+    ssh root@puppet cd /etc/puppet/modules/$module \; 'GEM_HOME=$HOME/.gem-installed' 'PATH=$HOME/.gem-installed/bin:$PATH' rake spec || return 1
+
     local instance=rsnapshot
     #
     # setup
