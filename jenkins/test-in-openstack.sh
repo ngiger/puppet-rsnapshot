@@ -30,6 +30,7 @@ cat > /etc/puppet/manifests/site.pp <<'INNER_EOF'
 node '$instance.novalocal' {
   class { 'rsnapshot::server': }
   class { 'rsnapshot::client': }
+  class { 'rsnapshot::nagios': }
 }
 
 node 'puppet.novalocal' {

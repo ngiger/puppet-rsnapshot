@@ -1,0 +1,91 @@
+#!/bin/bash
+#
+#    Copyright (C) 2013 Loic Dachary <loic@dachary.org>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+set -e
+: ${LOGFILES:="/var/log/rsnapshot.log /var/log/rsnapshot/*.log"}
+: ${SUCCESS:="completed successfully"}
+
+function run() {
+    local failures=0
+    
+    for file in ${LOGFILES} ; do
+        if [ -f "$file" ] ; then
+            if ! tail -1 $file | grep --quiet "$SUCCESS" ; then
+                echo $file failed rsnapshot
+                failures=1
+            fi
+        fi
+    done
+    
+    return $failures
+}
+
+if [ "$1" = TEST ] ; then
+    set -x
+    set -o functrace
+    PS4=' ${FUNCNAME[0]}: $LINENO: '
+
+    logfile=$(mktemp)
+    unlikely=/tmp/unlikelytoexist
+
+    LOGFILES="${logfile} $unlikely"
+
+    function test_run() {
+        if out="$(run)" ; then
+            echo "it should fail "
+            return 1
+        fi
+
+        if expr "$out" : "$unlikely"  ; then
+            echo "$unlikely is supposed to be ignored but shows in the output"
+            echo "$out"
+            return 2
+        fi
+
+        if ! expr "$out" : "$logfile"  ; then
+            echo "$logfile is supposed show in the output because it failed to demonstrate success but it does not"
+            echo "$out"
+            return 3
+        fi
+
+        echo "$SUCCESS" > $logfile
+
+        out="$(run)"
+        if ! [ -z "$out" ] ; then
+            echo 'expected successfull run'
+            return 4
+        fi
+
+        rm $logfile
+    }
+
+    test_run
+
+elif [ "$1" = "-h" -o "$1" = "--help" ] ; then
+    cat <<EOF
+Usage: check_rsnapshot [--help] [-h]
+
+
+EOF
+else
+    run "$@"
+fi
+
+# Interpreted by emacs
+# Local Variables:
+# compile-command: "bash check_rsnapshot TEST"
+# End:
