@@ -54,7 +54,7 @@ cmd_rsync	/usr/bin/rsync
 
 # Uncomment this to enable remote ssh backups over rsync.
 #
-#cmd_ssh	/usr/bin/ssh
+cmd_ssh		/usr/bin/ssh
 
 # Comment this out to disable syslog support.
 #
@@ -121,14 +121,14 @@ loglevel	3
 # If you enable this, data will be written to the file you specify. The
 # amount of data written is controlled by the "loglevel" parameter.
 #
-#logfile	/var/log/rsnapshot.log
+logfile		/var/log/rsnapshot/<%= fqdn %>.log
 
 # If enabled, rsnapshot will write a lockfile to prevent two instances
 # from running simultaneously (and messing up the snapshot_root).
 # If you enable this, make sure the lockfile directory is not world
 # writable. Otherwise anyone can prevent the program from running.
 #
-lockfile	/var/cache/rsnapshot/<%= fqdn %>.pid
+lockfile	/var/run/rsnapshot/<%= fqdn %>.pid
 
 # By default, rsnapshot check lockfile, check if PID is running
 # and if not, consider lockfile as stale, then start
@@ -166,6 +166,7 @@ ssh_args	-i /root/.ssh/rsnapshot_key -o StrictHostKeyChecking=false
 #include	???
 exclude	/proc
 exclude	/sys
+exclude /var/cache/rsnapshot
 
 # The include_file and exclude_file parameters, if enabled, simply get
 # passed directly to rsync. Please look up the --include-from and
@@ -226,7 +227,7 @@ exclude	/sys
 ### BACKUP POINTS / SCRIPTS ###
 ###############################
 
-backup	root@<%= fqdn %>:/	<%= fqdn %>/
+backup	root@<%= fqdn %>:/	.
 # LOCALHOST
 #backup	/home/		localhost/
 #backup	/etc/		localhost/

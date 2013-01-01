@@ -51,6 +51,15 @@ class rsnapshot::server (
   }
 
   File <<| tag == 'rsnapshot' |>>
+
+  file {
+    "/var/run/rsnapshot/":
+      ensure => directory,
+      mode => '0755', owner => root, group => root,
+    "/var/log/rsnapshot/":
+      ensure => directory,
+      mode => '0755', owner => root, group => root,
+  }
 }
 
 class rsnapshot::client (
@@ -62,7 +71,7 @@ class rsnapshot::client (
   @@file { "/var/cache/rsnapshot/${::fqdn}.conf":
     ensure => present,
     mode => '0444', owner => root, group => root,
-    content => template('templates/rsnapshot/rsnapshot.conf.erb'),
+    content => template('rsnapshot/rsnapshot.conf.erb'),
     tag => 'rsnapshot',
   }
 }
