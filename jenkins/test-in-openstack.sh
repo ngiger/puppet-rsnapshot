@@ -38,7 +38,7 @@ EOF
     while ! nmap $instance -PN -p ssh | grep open ; do sleep 1 ; done
     ssh -o 'StrictHostKeyChecking=false' root@$instance tail -f /var/log/daemon.log | sed --unbuffered -e "s/^/$instance: /" -e '/Finished catalog run/q' 
 
-    ssh root@$instance test -f /etc/rsnapshot.conf
+    ssh root@$instance test -f /etc/rsnapshot.conf || return 2
 
     #
     # teardown
