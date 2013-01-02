@@ -74,6 +74,7 @@ class rsnapshot::server (
   $public_key = file('/etc/puppet/modules/rsnapshot/files/rsnapshot_key.pub')
   
   @@file_line { 'rsnapshot_public_key':
+    ensure => present,
     path => '/root/.ssh/authorized_keys',
     line => "from=\"127.0.0.1,$ip\",command=\"echo \\\"\$SSH_ORIGINAL_COMMAND\\\" | grep --quiet '^rsync --server --sender' && ionice -c3 \$SSH_ORIGINAL_COMMAND\" $public_key",
     tag => 'rsnapshot',
