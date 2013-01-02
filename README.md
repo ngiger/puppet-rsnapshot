@@ -23,40 +23,40 @@ Usage
     
 or
 
-    puppet module install puppet-rsnapshot
+    puppet module install loic/rsnapshot
     
 Here is an example usage of the module extracted from a manifest:
 
->node 'bm0001.the.re' {
->  class { 'rsnapshot::puppetmaster': }
->  class { 'rsnapshot::client':
->    excludes => [ '/var/lib/glance',
->                  '/var/lib/nova',
->                  '/media/turnkey', ]
->  }
->}
->
->node 'rsnapshot.novalocal' {
->  class { 'rsnapshot::server':
->    ip => "5.9.88.172,${::ipaddress}",
->  }
->}
->
->node 'jenkins.novalocal', 'redmine.novalocal', 'there.novalocal' {
->  class { 'rsnapshot::client':
->    ip => $::ipaddress,
->  }
->}
->
->node 'debian.novalocal' {
->  class { 'rsnapshot::client':
->    ip => $::ipaddress,
->    excludes => [ '/media/debian' ],
->  }
->}
->node 'nagios.novalocal' {
->  class { 'rsnapshot::nagios: }
->}
+    node 'bm0001.the.re' {
+      class { 'rsnapshot::puppetmaster': }
+      class { 'rsnapshot::client':
+        excludes => [ '/var/lib/glance',
+                      '/var/lib/nova',
+                      '/media/turnkey', ]
+      }
+    }
+    
+    node 'rsnapshot.novalocal' {
+      class { 'rsnapshot::server':
+        ip => "5.9.88.172,${::ipaddress}",
+      }
+    }
+    
+    node 'jenkins.novalocal', 'redmine.novalocal', 'there.novalocal' {
+      class { 'rsnapshot::client':
+        ip => $::ipaddress,
+      }
+    }
+    
+    node 'debian.novalocal' {
+      class { 'rsnapshot::client':
+        ip => $::ipaddress,
+        excludes => [ '/media/debian' ],
+      }
+    }
+    node 'nagios.novalocal' {
+      class { 'rsnapshot::nagios: }
+    }
 
 For a detailed explanation of each class, check the [documentation](http://redmine.the.re/projects/puppet-rsnapshot/repository/revisions/master/entry/manifests/init.pp "puppet-rsnapshot documentation and implementation")
 
