@@ -94,6 +94,7 @@ class rsnapshot::server (
 
 class rsnapshot::client (
   $excludes = [],
+  $ip = $::fqdn,
   ) {
   
   File_line <<| tag == 'rsnapshot' |>>
