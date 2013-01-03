@@ -196,7 +196,11 @@ class rsnapshot::client (
   $excludes = [],
   $ip = $::fqdn,
   ) {
-  
+
+  if ! defined(Package['rsync']) {
+    package { 'rsync': ensure => installed }
+  }
+    
   File_line <<| tag == 'rsnapshot' |>>
 
   @@file { "/var/cache/rsnapshot/${::fqdn}.conf":

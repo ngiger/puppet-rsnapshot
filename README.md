@@ -4,7 +4,7 @@ puppet-rsnapshot
 Introduction
 ------------
 
-[puppet-rsnapshot](http://redmine.the.re/projects/puppet-rsnapshot "puppet rsnapshot module") is a [rsnapshot](http://www.rsnapshot.org/ "rsnapshot is a filesystem snapshot utility for making backups of local and remote systems") puppet module. It is based on the following assumptions:
+[puppet-rsnapshot](http://redmine.the.re/projects/puppet-rsnapshot "puppet rsnapshot module") is a [rsnapshot](http://www.rsnapshot.org/ "rsnapshot is a filesystem snapshot utility for making backups of local and remote systems") puppet module published on the [puppet forge](http://forge.puppetlabs.com "puppet forge") under the name [loic/rsnapshot](http://forge.puppetlabs.com/loic/rsnapshot "rsnapshot release on puppet forge"). It is based on the following assumptions:
 
 * All machines have rsync over ssh
 * All backups consist of the entire file system of the machine

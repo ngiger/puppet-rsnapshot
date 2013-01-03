@@ -1,5 +1,5 @@
 name    'loic-rsnapshot'
-version '1.0.0'
+version '1.1.0'
 source 'http://redmine.the.re/git/puppet-rsnapshot.git'
 author 'Loic Dachary'
 license 'AGPLv3+'
