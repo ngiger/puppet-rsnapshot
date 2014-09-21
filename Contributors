@@ -1,0 +1,5 @@
+Niklaus Giger, September 2014
+* Port to puppet 3.6
+* Made puppet lint happy
+* Added support for running checks under travis-ci
+

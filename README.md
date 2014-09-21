@@ -60,6 +60,15 @@ Here is an example usage of the module extracted from a manifest:
 
 For a detailed explanation of each class, check the [documentation](http://redmine.the.re/projects/puppet-rsnapshot/repository/revisions/master/entry/manifests/init.pp "puppet-rsnapshot documentation and implementation")
 
+
+Contribute
+----------
+
+* Fork the code
+* Make changes
+* Make the script command specified in .travis.yml work. E.g bundle exec rake lint && bundle exec rake spec SPEC_OPTS='--format documentation'
+* Submit changes
+
 License
 -------
 #
