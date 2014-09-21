@@ -1,5 +1,5 @@
 fixtures:
   repositories:
-    "stdlib": "git://github.com/puppetlabs/puppetlabs-stdlib.git spec/fixtures/modules/stdlib ; cd spec/fixtures/modules/stdlib ; git checkout 326a13908ba8a725a85330d040e3c5cc0b211524 "
+    "stdlib": "git://github.com/puppetlabs/puppetlabs-stdlib.git"
   symlinks:
     "rsnapshot": "#{source_dir}"

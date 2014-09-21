@@ -1,5 +1,5 @@
 Niklaus Giger, September 2014
 * Port to puppet 3.6
+* Replaced Modulefile by metadata.json
 * Made puppet lint happy
 * Added support for running checks under travis-ci
-
