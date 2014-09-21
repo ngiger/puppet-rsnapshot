@@ -1,0 +1,14 @@
+{
+  "name": "loic-rsnapshot",
+  "version": "1.2.0",
+  "author": "Loic Dachary",
+  "license": "AGPLv3+",
+  "summary": "rsnapshot configuration, client and server side",
+  "source": "",
+  "project_page": "http://redmine.the.re/projects/puppet-rsnapshot",
+  "issues_url": null,
+  "description": "rsnapshot module for Debian, configuring the target machines to have their entire file system saved with rsync over ssh",
+  "dependencies": [
+    {"name":"puppetlabs/stdlib","version_requirement":">= 2.0.0"}
+  ]
+}
