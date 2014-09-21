@@ -58,13 +58,10 @@ class rsnapshot::client (
   $ip = $::fqdn,
   ) {
 
-  if ! defined(Package['rsync']) {
-    package { 'rsync': ensure => installed }
-  }
-
+  ensure_packages(['rsync', 'rsnapshot'], {ensure => present})
   File_line <<| tag == 'rsnapshot' |>>
 
-  @@file { "/var/cache/rsnapshot/${::fqdn}.conf":
+  file { "/var/cache/rsnapshot/${::fqdn}.conf":
     ensure  => present,
     mode    => '0444',
     owner   => root,

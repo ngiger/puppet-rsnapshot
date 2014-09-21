@@ -30,7 +30,7 @@ config_version	1.2
 
 # All snapshots will be stored under this root directory.
 #
-snapshot_root	/var/cache/rsnapshot/<%= fqdn %>/
+snapshot_root	/var/cache/rsnapshot/<%= @fqdn %>/
 
 #################################
 # EXTERNAL PROGRAM DEPENDENCIES #
@@ -121,14 +121,14 @@ loglevel	3
 # If you enable this, data will be written to the file you specify. The
 # amount of data written is controlled by the "loglevel" parameter.
 #
-logfile		/var/log/rsnapshot/<%= fqdn %>.log
+logfile		/var/log/rsnapshot/<%= @fqdn %>.log
 
 # If enabled, rsnapshot will write a lockfile to prevent two instances
 # from running simultaneously (and messing up the snapshot_root).
 # If you enable this, make sure the lockfile directory is not world
 # writable. Otherwise anyone can prevent the program from running.
 #
-lockfile	/var/run/rsnapshot/<%= fqdn %>.pid
+lockfile	/var/run/rsnapshot/<%= @fqdn %>.pid
 
 # By default, rsnapshot check lockfile, check if PID is running
 # and if not, consider lockfile as stale, then start
@@ -167,7 +167,7 @@ ssh_args	-i /root/.ssh/rsnapshot_key -o StrictHostKeyChecking=false
 exclude	/proc
 exclude	/sys
 exclude	/var/cache/rsnapshot
-<% excludes.each do |exclude| -%>
+<% @excludes.each do |exclude| -%>
 exclude	<%= exclude -%>
 
 <% end -%>
@@ -232,7 +232,7 @@ exclude	<%= exclude -%>
 ### BACKUP POINTS / SCRIPTS ###
 ###############################
 
-backup	root@<%= ip %>:/	.
+backup	root@<%= @ip %>:/	.
 # LOCALHOST
 #backup	/home/		localhost/
 #backup	/etc/		localhost/
