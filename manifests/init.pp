@@ -29,9 +29,9 @@
 #
 class rsnapshot::puppetmaster {
   file {
-    "/etc/puppet/modules/rsnapshot/files":
-      ensure => directory, mode => 0700,
-      owner => puppet, group => nogroup,
+    '/etc/puppet/modules/rsnapshot/files':
+      ensure                    => directory, mode => '0700',
+      owner                     => puppet, group    => nogroup,
   }
 
   exec { 'create_key':
@@ -56,14 +56,14 @@ class rsnapshot::puppetmaster {
 #
 class rsnapshot::nagios {
   file {
-    "/usr/lib/nagios":
-      ensure => directory, mode => 0755,
+    '/usr/lib/nagios':
+      ensure => directory, mode => '0755',
       owner => root, group => root;
-    "/usr/lib/nagios/plugins":
-      ensure => directory, mode => 0755,
+    '/usr/lib/nagios/plugins':
+      ensure => directory, mode => '0755',
       owner => root, group => root;
-    "/usr/lib/nagios/plugins/check_rsnapshot":
-      ensure => present, mode => 0555,
+    '/usr/lib/nagios/plugins/check_rsnapshot':
+      ensure => present, mode => '0555',
       owner => root, group => root,
       source => 'puppet:///rsnapshot/check_rsnapshot';
   }
@@ -113,22 +113,22 @@ class rsnapshot::server (
     ensure => installed
   }
 
-  file { "/etc/logrotate.d/rsnapshot":
-    ensure => present, mode => 0444,
-    owner => root, group => root,
-    source => 'puppet:///rsnapshot/logrotate.d/rsnapshot',
-    require => Package['rsnapshot'],
+  file { '/etc/logrotate.d/rsnapshot':
+    ensure                  => present, mode => '0444',
+    owner                   => root, group    => root,
+    source                  => 'puppet:///rsnapshot/logrotate.d/rsnapshot',
+    require                 => Package['rsnapshot'],
   }
 
-  file { "/etc/cron.d/rsnapshot":
-    ensure => present, mode => 0444,
-    owner => root, group => root,
-    source => 'puppet:///rsnapshot/cron.d/rsnapshot',
-    require => Package['rsnapshot'],
+  file { '/etc/cron.d/rsnapshot':
+    ensure                  => present, mode => '0444',
+    owner                   => root, group    => root,
+    source                  => 'puppet:///rsnapshot/cron.d/rsnapshot',
+    require                 => Package['rsnapshot'],
   }
 
-  file { "/root/.ssh/rsnapshot_key":
-    ensure => present, mode => 0400,
+  file { '/root/.ssh/rsnapshot_key':
+    ensure => present, mode => '0400',
     owner => root, group => root,
     source => 'puppet:///rsnapshot/rsnapshot_key';
   }
@@ -137,18 +137,18 @@ class rsnapshot::server (
   
   @@file_line { 'rsnapshot_public_key':
     ensure => present,
-    path => '/root/.ssh/authorized_keys',
-    line => "from=\"127.0.0.1,$ip\",command=\"echo \\\"\$SSH_ORIGINAL_COMMAND\\\" | grep --quiet '^rsync --server --sender' && ionice -c3 \$SSH_ORIGINAL_COMMAND\" $public_key",
-    tag => 'rsnapshot',
+    path   => '/root/.ssh/authorized_keys',
+    line   => "from=\"127.0.0.1,${ip}\",command=\"echo \\\"\$SSH_ORIGINAL_COMMAND\\\" | grep --quiet '^rsync --server --sender' && ionice -c3 \$SSH_ORIGINAL_COMMAND\" ${public_key}",
+    tag    => 'rsnapshot',
   }
 
   File <<| tag == 'rsnapshot' |>>
 
   file {
-    "/var/run/rsnapshot/":
+    '/var/run/rsnapshot/':
       ensure => directory,
       mode => '0755', owner => root, group => root;
-    "/var/log/rsnapshot/":
+    '/var/log/rsnapshot/':
       ensure => directory,
       mode => '0755', owner => root, group => root;
   }
@@ -204,10 +204,10 @@ class rsnapshot::client (
   File_line <<| tag == 'rsnapshot' |>>
 
   @@file { "/var/cache/rsnapshot/${::fqdn}.conf":
-    ensure => present,
-    mode => '0444', owner => root, group => root,
-    content => template('rsnapshot/rsnapshot.conf.erb'),
-    require => Package['rsnapshot'],
-    tag => 'rsnapshot',
+    ensure                               => present,
+    mode                                 => '0444', owner                => root, group => root,
+    content                              => template('rsnapshot/rsnapshot.conf.erb'),
+    require                              => Package['rsnapshot'],
+    tag                                  => 'rsnapshot',
   }
 }
