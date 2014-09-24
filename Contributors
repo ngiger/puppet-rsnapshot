@@ -3,3 +3,4 @@ Niklaus Giger, September 2014
 * Replaced Modulefile by metadata.json
 * Made puppet lint happy
 * Added support for running checks under travis-ci
+* Added support rsnapshot::crontab (local backup, with cron job)

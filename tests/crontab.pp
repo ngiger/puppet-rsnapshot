@@ -9,14 +9,14 @@
 # Learn more about module testing here: http://docs.puppetlabs.com/guides/tests_smoke.html
 #
 
-rsnapshot::crontab{"demo_rsnapshot":
-  name     => "etc",
-  excludes => ['/etc/.git/'],
-  includes => ['/etc'], # Default is ['/'], backup everything
-  destination  => "/var/cache/backup",
-  ionice       => "ionice -c3",
-  time_hourly  => "15 */4", # every four hours 
-  time_daily   => "15 23",  # 11 PM 15
-  time_weekly  => "30 23",
-  time_monthly => "45 23",
-                 }
+rsnapshot::crontab{'demo_rsnapshot':
+  name         => 'etc',
+  excludes     => ['/etc/.git/'],
+  includes     => ['/etc'], # Default is ['/'], backup everything
+  destination  => '/var/cache/backup',
+  ionice       => 'ionice -c3',
+  time_hourly  => '15 */4', # every four hours 
+  time_daily   => '15 23',  # 11 PM 15
+  time_weekly  => '30 23',
+  time_monthly => '45 23',
+}

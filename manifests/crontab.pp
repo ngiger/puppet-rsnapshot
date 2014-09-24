@@ -79,18 +79,18 @@
 #
 
 define rsnapshot::crontab (
-	$name     = "",
+  $name     = '',
   $excludes = [],
   $includes = [], # Default is ['/'], backup everything
-  $destination  = "",
-  $ionice       = "ionice -c3",
-  $time_hourly  = "",
-  $time_daily   = "30 3",
-  $time_weekly  = "0  3",
-  $time_monthly = "30 2",
+  $destination  = '',
+  $ionice       = 'ionice -c3',
+  $time_hourly  = '',
+  $time_daily   = '30 3',
+  $time_weekly  = '0  3',
+  $time_monthly = '30 2',
   ) {
 
-  if ($name != "") {
+  if ($name != '') {
     ensure_packages(['rsync', 'rsnapshot'], {ensure => present})
 
     file { "/etc/rsnapshot.${name}.conf":
