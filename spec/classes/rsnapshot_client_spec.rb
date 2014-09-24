@@ -20,11 +20,23 @@ describe 'rsnapshot::client' do
   let(:node) { 'testhost.example.com' }
 
   context 'when running on Debian GNU/Linux' do
-
     it {
       should contain_package('rsync').with_ensure(/present|installed/)
       should contain_package('rsnapshot').with_ensure(/present|installed/)
-      should contain_file("/var/cache/rsnapshot/testhost.example.com.conf")
+      should contain_file('/var/cache/rsnapshot/testhost.example.com.conf').with_content(/\nbackup\troot@testhost.example.com:\/\t./)
+    }
+  end
+end
+
+describe 'rsnapshot::client' do
+  let(:node) { 'testhost.example.com' }
+  let(:params) { {:excludes => ['/media/debian']} }
+  context 'when given excludes it should not backup these directories' do
+
+    it {
+      should contain_package('rsnapshot').with_ensure(/present|installed/)
+      should contain_file('/var/cache/rsnapshot/testhost.example.com.conf').with_content(/\nbackup\troot@testhost.example.com:\/\t./)
+      should contain_file('/var/cache/rsnapshot/testhost.example.com.conf').with_content(/\nexclude\t\/media\/debian/)
     }
       
   end

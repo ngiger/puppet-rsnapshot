@@ -52,6 +52,7 @@
 
 class rsnapshot::server (
   $ip = $::ipaddress,
+  $public_key = [], # file('/etc/puppet/modules/rsnapshot/files/rsnapshot_key.pub')
   ) {
   package { 'rsnapshot':
     ensure => installed
@@ -71,7 +72,7 @@ class rsnapshot::server (
     mode    => '0444',
     owner   => root,
     group   => root,
-    source  => 'puppet:///modules/rsnapshot/cron.d/rsnapshot',
+    content => template('rsnapshot/cron.d/rsnapshot.erb'),
     require => Package['rsnapshot'],
   }
 
@@ -81,9 +82,7 @@ class rsnapshot::server (
     source => 'puppet:///modules/rsnapshot/rsnapshot_key';
   }
 
-  $public_key = file('/etc/puppet/modules/rsnapshot/files/rsnapshot_key.pub')
-
-  @@file_line { 'rsnapshot_public_key':
+  file_line { 'rsnapshot_public_key':
     ensure => present,
     path   => '/root/.ssh/authorized_keys',
     line   => "from=\"127.0.0.1,${ip}\",command=\"echo \\\"\$SSH_ORIGINAL_COMMAND\\\" | grep --quiet '^rsync --server --sender' && ionice -c3 \$SSH_ORIGINAL_COMMAND\" ${public_key}",
