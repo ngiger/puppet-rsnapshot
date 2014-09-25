@@ -62,3 +62,36 @@ describe 'rsnapshot::crontab' do
          /45 23  1 \* \*  root ionice -c3 \/usr\/bin\/rsnapshot -c \/etc\/rsnapshot.etc.conf monthly\s+>> \/var\/log\/rsnapshot\/etc.monthly.log\n/) }
   end
 end
+
+describe 'rsnapshot::crontab' do
+  let(:node) { 'testhost.example.com' }
+  let(:title) { 'demo' }
+  let(:params) { {
+            :name     => 'etc',
+            :excludes => ['/etc/.git/', '/etc/hosts'],
+            :includes => ['/etc', '/special'],
+            :destination  => '/var/cache/backup',
+            :ionice       => nil,
+            :time_hourly  => nil,
+            :time_daily   => nil,
+            :time_weekly  => nil,
+            :time_monthly => nil,
+          } }
+
+  context 'when running on Debian GNU/Linux' do
+    it { should contain_package('rsync').with_ensure(/present|installed/) }
+    it { should contain_package('rsnapshot').with_ensure(/present|installed/) }
+
+    it { should contain_file('/etc/rsnapshot.etc.conf').with_content(/\nsnapshot_root\t\/var\/cache\/backup\n/) }
+    it { should contain_file('/etc/rsnapshot.etc.conf').with_content(/\nexclude\t\/var/) }
+    it { should contain_file('/etc/rsnapshot.etc.conf').with_content(/\nexclude\t\/etc\/.git\/\n/) }
+    it { should contain_file('/etc/rsnapshot.etc.conf').with_content(/\nbackup\t\/etc\t\.\n/) }
+    it { should contain_file('/etc/rsnapshot.etc.conf').with_content(/\nbackup\t\/special\t\.\n/) }
+
+    it { should contain_file('/etc/cron.d/rsnapshot_etc').without_content(/ionice/) }
+    it { should contain_file('/etc/cron.d/rsnapshot_etc').without_content(/hourly/) }
+    it { should contain_file('/etc/cron.d/rsnapshot_etc').without_content(/daily/) }
+    it { should contain_file('/etc/cron.d/rsnapshot_etc').without_content(/weekly/) }
+    it { should contain_file('/etc/cron.d/rsnapshot_etc').without_content(/monthly/) }
+  end
+end

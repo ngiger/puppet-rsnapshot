@@ -84,7 +84,7 @@ define rsnapshot::crontab (
   $includes = [], # Default is ['/'], backup everything
   $destination  = '',
   $ionice       = 'ionice -c3',
-  $time_hourly  = '',
+  $time_hourly  = nil,
   $time_daily   = '30 3',
   $time_weekly  = '0  3',
   $time_monthly = '30 2',

@@ -2,19 +2,16 @@
 # DO NOT CHANGE : IT WILL BE OVERRIDEN BY PUPPET ON THE NEXT RUN
 # GENERATED FROM puppet.the.re:/etc/puppet/modules/puppet-rsnapshot/templates/cron.d/rsnapshot_crontab.erb
 #
-# m h dom mon dow usercommand
-<% if @time_hourly -%>
+# m h dom mon dow user command
+<% if @time_hourly and @time_hourly != 'nil' %>
 <%= @time_hourly   -%>  * * *  root <%= @ionice -%> /usr/bin/rsnapshot -c /etc/rsnapshot.<%= @name -%>.conf hourly   >> /var/log/rsnapshot/<%= @name -%>.hourly.log
-<% end -%>
-
-<% if @time_daily -%>
+<% end %>
+<% if @time_daily and @time_daily != 'nil' %>
 <%= @time_daily   -%>  * * *  root <%= @ionice -%> /usr/bin/rsnapshot -c /etc/rsnapshot.<%= @name -%>.conf daily   >> /var/log/rsnapshot/<%= @name -%>.daily.log
 <% end -%>
-
-<% if @time_weekly -%>
+<% if @time_weekly and @time_weekly != 'nil' %>
 <%= @time_weekly  -%>  * * 1  root <%= @ionice -%> /usr/bin/rsnapshot -c /etc/rsnapshot.<%= @name -%>.conf weekly  >> /var/log/rsnapshot/<%= @name -%>.weekly.log
 <% end -%>
-
-<% if @time_monthly -%>
-<%= @time_monthly -%>  1 * *  root <%= @ionice -%> /usr/bin/rsnapshot -c /etc/rsnapshot.<%= @name -%>.conf monthly >> /var/log/rsnapshot/<%= @name -%>.monthly.log
-<% end -%>
+<% if @time_monthly and @time_monthly != 'nil' %>
+<%= @time_monthly  -%>  1 * *  root <%= @ionice -%> /usr/bin/rsnapshot -c /etc/rsnapshot.<%= @name -%>.conf monthly  >> /var/log/rsnapshot/<%= @name -%>.monthly.log
+<% end %>
