@@ -3,19 +3,18 @@
 # GENERATED FROM puppet.the.re:/etc/puppet/modules/puppet-rsnapshot/templates/cron.d/rsnapshot_crontab.erb
 #
 # m h dom mon dow usercommand
-conf_file=/etc/rsnapshot.<%= @name -%>.conf
 <% if @time_hourly -%>
-<%= @time_hourly   -%>  * * *  root <%= @ionice -%> /usr/bin/rsnapshot -c $conf_file hourly   >> /var/log/rsnapshot/<%= @name -%>.hourly.log
+<%= @time_hourly   -%>  * * *  root <%= @ionice -%> /usr/bin/rsnapshot -c /etc/rsnapshot.<%= @name -%>.conf hourly   >> /var/log/rsnapshot/<%= @name -%>.hourly.log
 <% end -%>
 
 <% if @time_daily -%>
-<%= @time_daily   -%>  * * *  root <%= @ionice -%> /usr/bin/rsnapshot -c $conf_file daily   >> /var/log/rsnapshot/<%= @name -%>.daily.log
+<%= @time_daily   -%>  * * *  root <%= @ionice -%> /usr/bin/rsnapshot -c /etc/rsnapshot.<%= @name -%>.conf daily   >> /var/log/rsnapshot/<%= @name -%>.daily.log
 <% end -%>
 
 <% if @time_weekly -%>
-<%= @time_weekly  -%>  * * 1  root <%= @ionice -%> /usr/bin/rsnapshot -c $conf_file weekly  >> /var/log/rsnapshot/<%= @name -%>.weekly.log
+<%= @time_weekly  -%>  * * 1  root <%= @ionice -%> /usr/bin/rsnapshot -c /etc/rsnapshot.<%= @name -%>.conf weekly  >> /var/log/rsnapshot/<%= @name -%>.weekly.log
 <% end -%>
 
 <% if @time_monthly -%>
-<%= @time_monthly -%>  1 * *  root <%= @ionice -%> /usr/bin/rsnapshot -c $conf_file monthly >> /var/log/rsnapshot/<%= @name -%>.monthly.log
+<%= @time_monthly -%>  1 * *  root <%= @ionice -%> /usr/bin/rsnapshot -c /etc/rsnapshot.<%= @name -%>.conf monthly >> /var/log/rsnapshot/<%= @name -%>.monthly.log
 <% end -%>
