@@ -21,10 +21,9 @@
 #
 # === Parameters
 #
-# [*name*]
-#   The name for the given configutation. The following files will be created
-#      /etc/rsnapshot/${name}.conf
-#      /etc/cron.d/rsnapshot_<name>
+# The title will be use as name for the given configutation. The following files will be created
+#      /etc/rsnapshot/${title}.conf
+#      /etc/cron.d/rsnapshot_<title>
 #
 # [*excludes*]
 #   An array of strings used to compose the *--exclude* arguments of
@@ -65,8 +64,7 @@
 #
 # === Example
 #
-#  rsnapshot::crontab{"demo_rsnapshot":
-#    name         => "etc",
+#  rsnapshot::crontab{"demo":
 #    excludes     => ['/etc/.git/'],
 #    includes     => ['/etc'], 
 #    destination  => "/var/cache/backup",
@@ -79,7 +77,6 @@
 #
 
 define rsnapshot::crontab (
-  $name     = '',
   $excludes = [],
   $includes = [], # Default is ['/'], backup everything
   $destination  = '',
@@ -89,27 +86,24 @@ define rsnapshot::crontab (
   $time_weekly  = '0  3',
   $time_monthly = '30 2',
   ) {
+  ensure_packages(['rsync', 'rsnapshot'], {ensure => present})
 
-  if ($name != '') {
-    ensure_packages(['rsync', 'rsnapshot'], {ensure => present})
+  file { "/etc/rsnapshot.${title}.conf":
+    ensure  => present,
+    mode    => '0444',
+    owner   => root,
+    group   => root,
+    content => template('rsnapshot/rsnapshot.conf.erb'),
+    require => Package['rsnapshot'],
+    tag     => 'rsnapshot',
+  }
 
-    file { "/etc/rsnapshot.${name}.conf":
-      ensure  => present,
-      mode    => '0444',
-      owner   => root,
-      group   => root,
-      content => template('rsnapshot/rsnapshot.conf.erb'),
-      require => Package['rsnapshot'],
-      tag     => 'rsnapshot',
-    }
-
-    file { "/etc/cron.d/rsnapshot_${name}":
-      ensure  => present,
-      mode    => '0444',
-      owner   => root,
-      group   => root,
-      content => template('rsnapshot/cron.d/rsnapshot_crontab.erb'),
-      require => Package['rsnapshot'],
-    }
+  file { "/etc/cron.d/rsnapshot_${title}":
+    ensure  => present,
+    mode    => '0444',
+    owner   => root,
+    group   => root,
+    content => template('rsnapshot/cron.d/rsnapshot_crontab.erb'),
+    require => Package['rsnapshot'],
   }
 }
