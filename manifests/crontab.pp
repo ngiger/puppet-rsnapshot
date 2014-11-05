@@ -66,10 +66,10 @@
 #
 #  rsnapshot::crontab{"demo":
 #    excludes     => ['/etc/.git/'],
-#    includes     => ['/etc'], 
+#    includes     => ['/etc'],
 #    destination  => "/var/cache/backup",
 #    ionice       => "ionice -c3",
-#    time_hourly  => "15 */4", # every four hours 
+#    time_hourly  => "15 */4", # every four hours
 #    time_daily   => "15 23",  # 11 PM 15
 #    time_weekly  => "30 23",
 #    time_monthly => "45 23",
@@ -105,5 +105,13 @@ define rsnapshot::crontab (
     group   => root,
     content => template('rsnapshot/cron.d/rsnapshot_crontab.erb'),
     require => Package['rsnapshot'],
+  }
+  file {
+    '/var/run/rsnapshot/':
+      ensure => directory,
+      mode => '0755', owner => root, group => root;
+    '/var/log/rsnapshot/':
+      ensure => directory,
+      mode => '0755', owner => root, group => root;
   }
 }

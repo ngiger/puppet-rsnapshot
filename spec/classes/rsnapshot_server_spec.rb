@@ -25,9 +25,10 @@ describe 'rsnapshot::server' do
       should contain_file('/etc/logrotate.d/rsnapshot')
       should contain_file('/root/.ssh/rsnapshot_key')
       # should contain_file('/root/.ssh/authorized_keys')
+      should contain_file('/var/log/rsnapshot/').with_ensure('directory')
       should contain_file('/etc/cron.d/rsnapshot') # .with_content(/./)
     }
-      
+
   end
 
 end

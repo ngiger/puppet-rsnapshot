@@ -59,6 +59,7 @@ describe 'rsnapshot::crontab' do
          /30 23  \* \* 1  root ionice -c3 \/usr\/bin\/rsnapshot -c \/etc\/rsnapshot.etc.conf weekly\s+>> \/var\/log\/rsnapshot\/etc.weekly.log\n/) }
     it { should contain_file('/etc/cron.d/rsnapshot_etc').with_content(
          /45 23  1 \* \*  root ionice -c3 \/usr\/bin\/rsnapshot -c \/etc\/rsnapshot.etc.conf monthly\s+>> \/var\/log\/rsnapshot\/etc.monthly.log\n/) }
+    it { should contain_file('/var/log/rsnapshot/').with_ensure('directory') }
   end
 end
 
@@ -77,19 +78,22 @@ describe 'rsnapshot::crontab' do
           } }
 
   context 'when running on Debian GNU/Linux' do
-    it { should contain_package('rsync').with_ensure(/present|installed/) }
-    it { should contain_package('rsnapshot').with_ensure(/present|installed/) }
+    it {
+      should contain_package('rsync').with_ensure(/present|installed/)
+      should contain_package('rsnapshot').with_ensure(/present|installed/)
 
-    it { should contain_file('/etc/rsnapshot.demo.conf').with_content(/\nsnapshot_root\t\/var\/cache\/backup\n/) }
-    it { should contain_file('/etc/rsnapshot.demo.conf').with_content(/\nexclude\t\/var/) }
-    it { should contain_file('/etc/rsnapshot.demo.conf').with_content(/\nexclude\t\/etc\/.git\/\n/) }
-    it { should contain_file('/etc/rsnapshot.demo.conf').with_content(/\nbackup\t\/etc\t\.\n/) }
-    it { should contain_file('/etc/rsnapshot.demo.conf').with_content(/\nbackup\t\/special\t\.\n/) }
+      should contain_file('/etc/rsnapshot.demo.conf').with_content(/\nsnapshot_root\t\/var\/cache\/backup\n/)
+      should contain_file('/etc/rsnapshot.demo.conf').with_content(/\nexclude\t\/var/)
+      should contain_file('/etc/rsnapshot.demo.conf').with_content(/\nexclude\t\/etc\/.git\/\n/)
+      should contain_file('/etc/rsnapshot.demo.conf').with_content(/\nbackup\t\/etc\t\.\n/)
+      should contain_file('/etc/rsnapshot.demo.conf').with_content(/\nbackup\t\/special\t\.\n/)
 
-    it { should contain_file('/etc/cron.d/rsnapshot_demo').without_content(/ionice/) }
-    it { should contain_file('/etc/cron.d/rsnapshot_demo').without_content(/hourly/) }
-    it { should contain_file('/etc/cron.d/rsnapshot_demo').without_content(/daily/) }
-    it { should contain_file('/etc/cron.d/rsnapshot_demo').without_content(/weekly/) }
-    it { should contain_file('/etc/cron.d/rsnapshot_demo').without_content(/monthly/) }
+      should contain_file('/etc/cron.d/rsnapshot_demo').without_content(/ionice/)
+      should contain_file('/etc/cron.d/rsnapshot_demo').without_content(/hourly/)
+      should contain_file('/etc/cron.d/rsnapshot_demo').without_content(/daily/)
+      should contain_file('/etc/cron.d/rsnapshot_demo').without_content(/weekly/)
+      should contain_file('/etc/cron.d/rsnapshot_demo').without_content(/monthly/)
+      should contain_file('/var/log/rsnapshot/').with_ensure('directory')
+  }
   end
 end
