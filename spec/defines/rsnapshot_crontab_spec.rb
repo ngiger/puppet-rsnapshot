@@ -52,15 +52,17 @@ describe 'rsnapshot::crontab' do
     it { should contain_file('/etc/cron.d/rsnapshot_etc').with_content(/\n30 23  \* \* 1/) }
     it { should contain_file('/etc/cron.d/rsnapshot_etc').with_content(/\n45 23  1 \* \* /) }
     it { should contain_file('/etc/cron.d/rsnapshot_etc').with_content(
-         /15 \*\/4  \* \* \*  root ionice -c3 \/usr\/bin\/rsnapshot -c \/etc\/rsnapshot.etc.conf hourly\s+>> \/var\/log\/rsnapshot\/etc.hourly.log\n/) }
+         /15 \*\/4  \* \* \*  root ionice -c3 \/usr\/bin\/rsnapshot -q -c \/etc\/rsnapshot.etc.conf hourly\s+>> \/var\/log\/rsnapshot\/etc.hourly.log\n/) }
     it { should contain_file('/etc/cron.d/rsnapshot_etc').with_content(
-         /15 23  \* \* \*  root ionice -c3 \/usr\/bin\/rsnapshot -c \/etc\/rsnapshot.etc.conf daily\s+>> \/var\/log\/rsnapshot\/etc.daily.log\n/) }
+         /15 23  \* \* \*  root ionice -c3 \/usr\/bin\/rsnapshot -q -c \/etc\/rsnapshot.etc.conf daily\s+>> \/var\/log\/rsnapshot\/etc.daily.log\n/) }
     it { should contain_file('/etc/cron.d/rsnapshot_etc').with_content(
-         /30 23  \* \* 1  root ionice -c3 \/usr\/bin\/rsnapshot -c \/etc\/rsnapshot.etc.conf weekly\s+>> \/var\/log\/rsnapshot\/etc.weekly.log\n/) }
+         /30 23  \* \* 1  root ionice -c3 \/usr\/bin\/rsnapshot -q -c \/etc\/rsnapshot.etc.conf weekly\s+>> \/var\/log\/rsnapshot\/etc.weekly.log\n/) }
     it { should contain_file('/etc/cron.d/rsnapshot_etc').with_content(
-         /45 23  1 \* \*  root ionice -c3 \/usr\/bin\/rsnapshot -c \/etc\/rsnapshot.etc.conf monthly\s+>> \/var\/log\/rsnapshot\/etc.monthly.log\n/) }
+         /45 23  1 \* \*  root ionice -c3 \/usr\/bin\/rsnapshot -q -c \/etc\/rsnapshot.etc.conf monthly\s+>> \/var\/log\/rsnapshot\/etc.monthly.log\n/) }
     it { should contain_file('/var/log/rsnapshot/').with_ensure('directory') }
   end
+#        +45 23  1 * *  root ionice -c3 /usr/bin/rsnapshot -q -c/etc/rsnapshot.etc.conf monthly  >> /var/log/rsnapshot/etc.monthly.log
+
 end
 
 describe 'rsnapshot::crontab' do
