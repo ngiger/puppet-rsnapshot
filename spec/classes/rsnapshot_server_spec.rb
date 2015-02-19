@@ -19,6 +19,7 @@ require 'spec_helper'
 describe 'rsnapshot::server' do
 
   context 'when running on Debian GNU/Linux' do
+    let(:facts) { {:operatingsystem => 'Debian', :ipaddress => '192.168.0.1'} }
 
     it {
       should contain_package('rsnapshot').with_ensure('installed')
