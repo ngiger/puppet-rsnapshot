@@ -106,12 +106,6 @@ define rsnapshot::crontab (
     content => template('rsnapshot/cron.d/rsnapshot_crontab.erb'),
     require => Package['rsnapshot'],
   }
-  file {
-    '/var/run/rsnapshot/':
-      ensure => directory,
-      mode => '0755', owner => root, group => root;
-    '/var/log/rsnapshot/':
-      ensure => directory,
-      mode => '0755', owner => root, group => root;
-  }
+  ensure_resource('file', ['/var/run/rsnapshot/',  '/var/log/rsnapshot/'], {ensure => directory,  mode => '0755', owner => root, group => root} )
 }
+
