@@ -99,3 +99,37 @@ describe 'rsnapshot::crontab' do
   }
   end
 end
+
+describe 'rsnapshot::crontab' do
+  let(:node) { 'testhost.example.com' }
+  let(:title) { 'cust_cfg' }
+  let(:params) { {
+            :excludes => ['/etc/.git/', '/etc/hosts'],
+            :includes => ['/etc', '/special'],
+            :destination  => '/var/cache/backup',
+            :custom_config => '/etc/rsnapshot.custom.conf',
+            :ionice       => " -3",
+            :time_hourly  => 5,
+            :time_daily   => 4,
+            :time_weekly  => 3,
+            :time_monthly => 2,
+          } }
+
+  context 'when running on Debian GNU/Linux' do
+    it {
+      should contain_package('rsync').with_ensure(/present|installed/)
+      should contain_package('rsnapshot').with_ensure(/present|installed/)
+
+      should_not contain_file(@custom_config)
+
+      common = '\s+[1\*]\s+\*\s+[1\*]\s+root\s+-3\s+.usr.bin.rsnapshot -q -c .etc.rsnapshot.custom.conf'
+      logfile = '\s+>>\s+.var.log.rsnapshot.cust_cfg.[^.]+.log'
+
+      should contain_file('/etc/cron.d/rsnapshot_cust_cfg').with_content(/5#{common} hourly#{logfile}/)
+      should contain_file('/etc/cron.d/rsnapshot_cust_cfg').with_content(/4#{common} daily#{logfile}/)
+      should contain_file('/etc/cron.d/rsnapshot_cust_cfg').with_content(/3#{common} weekly#{logfile}/)
+      should contain_file('/etc/cron.d/rsnapshot_cust_cfg').with_content(/2#{common} monthly#{logfile}/)
+      should contain_file('/var/log/rsnapshot/').with_ensure('directory')
+  }
+  end
+end
