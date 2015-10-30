@@ -46,19 +46,21 @@ describe 'rsnapshot::crontab' do
     it { should contain_file('/etc/rsnapshot.etc.conf').with_content(/\nexclude\t\/etc\/.git\/\n/) }
     it { should contain_file('/etc/rsnapshot.etc.conf').with_content(/\nbackup\t\/etc\t\.\n/) }
     it { should contain_file('/etc/rsnapshot.etc.conf').with_content(/\nbackup\t\/special\t\.\n/) }
+    it { should contain_file('/etc/rsnapshot.etc.conf').without_content(/\/var\/log\/rsnapshot/) }
 
     it { should contain_file('/etc/cron.d/rsnapshot_etc').with_content(/ionice -c3/) }
     it { should contain_file('/etc/cron.d/rsnapshot_etc').with_content(/\n15 \*\/4  \* \* \*/) }
     it { should contain_file('/etc/cron.d/rsnapshot_etc').with_content(/\n30 23  \* \* 1/) }
     it { should contain_file('/etc/cron.d/rsnapshot_etc').with_content(/\n45 23  1 \* \* /) }
+    it { should contain_file('/etc/cron.d/rsnapshot_etc').without_content(/\s+>>\s+\/var\/log\/rsnapshot/) }
     it { should contain_file('/etc/cron.d/rsnapshot_etc').with_content(
-         /15 \*\/4  \* \* \*  root ionice -c3 \/usr\/bin\/rsnapshot -q -c \/etc\/rsnapshot.etc.conf hourly\s+>> \/var\/log\/rsnapshot\/etc.hourly.log\n/) }
+         /15 \*\/4  \* \* \*  root ionice -c3 \/usr\/bin\/rsnapshot -q -c \/etc\/rsnapshot.etc.conf hourly/) }
     it { should contain_file('/etc/cron.d/rsnapshot_etc').with_content(
-         /15 23  \* \* \*  root ionice -c3 \/usr\/bin\/rsnapshot -q -c \/etc\/rsnapshot.etc.conf daily\s+>> \/var\/log\/rsnapshot\/etc.daily.log\n/) }
+         /15 23  \* \* \*  root ionice -c3 \/usr\/bin\/rsnapshot -q -c \/etc\/rsnapshot.etc.conf daily/) }
     it { should contain_file('/etc/cron.d/rsnapshot_etc').with_content(
-         /30 23  \* \* 1  root ionice -c3 \/usr\/bin\/rsnapshot -q -c \/etc\/rsnapshot.etc.conf weekly\s+>> \/var\/log\/rsnapshot\/etc.weekly.log\n/) }
+         /30 23  \* \* 1  root ionice -c3 \/usr\/bin\/rsnapshot -q -c \/etc\/rsnapshot.etc.conf weekly/) }
     it { should contain_file('/etc/cron.d/rsnapshot_etc').with_content(
-         /45 23  1 \* \*  root ionice -c3 \/usr\/bin\/rsnapshot -q -c \/etc\/rsnapshot.etc.conf monthly\s+>> \/var\/log\/rsnapshot\/etc.monthly.log\n/) }
+         /45 23  1 \* \*  root ionice -c3 \/usr\/bin\/rsnapshot -q -c \/etc\/rsnapshot.etc.conf monthly/) }
     it { should contain_file('/var/log/rsnapshot/').with_ensure('directory') }
   end
 #        +45 23  1 * *  root ionice -c3 /usr/bin/rsnapshot -q -c/etc/rsnapshot.etc.conf monthly  >> /var/log/rsnapshot/etc.monthly.log
@@ -123,12 +125,13 @@ describe 'rsnapshot::crontab' do
       should_not contain_file(@custom_config)
 
       common = '\s+[1\*]\s+\*\s+[1\*]\s+root\s+-3\s+.usr.bin.rsnapshot -q -c .etc.rsnapshot.custom.conf'
-      logfile = '\s+>>\s+.var.log.rsnapshot.cust_cfg.[^.]+.log'
+      should_not contain_file('/etc/rsnapshot.custom.conf') # or clients of our module cannot define it as they want
 
-      should contain_file('/etc/cron.d/rsnapshot_cust_cfg').with_content(/5#{common} hourly#{logfile}/)
-      should contain_file('/etc/cron.d/rsnapshot_cust_cfg').with_content(/4#{common} daily#{logfile}/)
-      should contain_file('/etc/cron.d/rsnapshot_cust_cfg').with_content(/3#{common} weekly#{logfile}/)
-      should contain_file('/etc/cron.d/rsnapshot_cust_cfg').with_content(/2#{common} monthly#{logfile}/)
+      should contain_file('/etc/cron.d/rsnapshot_cust_cfg').with_content(/5#{common} hourly/)
+      should contain_file('/etc/cron.d/rsnapshot_cust_cfg').with_content(/4#{common} daily/)
+      should contain_file('/etc/cron.d/rsnapshot_cust_cfg').with_content(/3#{common} weekly/)
+      should contain_file('/etc/cron.d/rsnapshot_cust_cfg').with_content(/2#{common} monthly/)
+      should contain_file('/etc/cron.d/rsnapshot_cust_cfg').without_content(/\s+>>\s+\/var\/log\/rsnapshot/)
       should contain_file('/var/log/rsnapshot/').with_ensure('directory')
   }
   end
