@@ -15,7 +15,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 require 'spec_helper'
-require 'puppetlabs_spec_helper/puppetlabs_spec/puppet_internals'
+
 describe "split()" do
   let(:scope) { PuppetlabsSpec::PuppetInternals.scope }
   it "should split 'one;two' on ';' into [ 'one', 'two' ]" do

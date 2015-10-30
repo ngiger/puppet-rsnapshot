@@ -81,6 +81,7 @@ define rsnapshot::crontab (
   $includes = [], # Default is ['/'], backup everything
   $destination  = '',
   $ionice       = 'ionice -c3',
+  $custom_config= false,
   $time_hourly  = nil,
   $time_daily   = '30 3',
   $time_weekly  = '0  3',
@@ -88,14 +89,16 @@ define rsnapshot::crontab (
   ) {
   ensure_packages(['rsync', 'rsnapshot'], {ensure => present})
 
-  file { "/etc/rsnapshot.${title}.conf":
-    ensure  => present,
-    mode    => '0444',
-    owner   => root,
-    group   => root,
-    content => template('rsnapshot/rsnapshot.conf.erb'),
-    require => Package['rsnapshot'],
-    tag     => 'rsnapshot',
+  if (!$custom_config) {
+    file { "/etc/rsnapshot.${title}.conf":
+      ensure  => present,
+      mode    => '0444',
+      owner   => root,
+      group   => root,
+      content => template('rsnapshot/rsnapshot.conf.erb'),
+      require => Package['rsnapshot'],
+      tag     => 'rsnapshot',
+    }
   }
 
   file { "/etc/cron.d/rsnapshot_${title}":
