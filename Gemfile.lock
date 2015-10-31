@@ -51,7 +51,6 @@ GEM
     rspec-support (3.3.0)
     spdx-licenses (1.0.0)
       json
-    syck (1.0.5)
 
 PLATFORMS
   ruby
@@ -64,7 +63,6 @@ DEPENDENCIES
   puppetlabs_spec_helper!
   rspec
   rspec-puppet (= 2.2.0)
-  syck
 
 BUNDLED WITH
    1.10.6
