@@ -15,5 +15,7 @@ matrix:
     env: PUPPET_GEM_VERSION="~> 3.5.0" STRICT_VARIABLES="yes"
 notifications:
   email: false
+
 # needs sudo: fals to run travis on new docker based infrastructure
 sudo: false
+cache: bundler
