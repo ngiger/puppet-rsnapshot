@@ -2,7 +2,7 @@
   "name": "loic-rsnapshot",
   "version": "1.2.0",
   "author": "Loic Dachary",
-  "license": "AGPLv3+",
+  "license": "AGPL-3.0",
   "summary": "rsnapshot configuration, client and server side",
   "source": "",
   "project_page": "http://redmine.the.re/projects/puppet-rsnapshot",
