@@ -40,6 +40,10 @@
 #   Preceed the rsnapshot command with ionice to minimize impact
 #   defaults to "ionice -c3". 3 == idle
 #
+# [*$custom_config*]
+#   Use the given rsnapshot_config file.
+#   defaults to false
+#
 # [*time_hourly*]
 #   crontab time when hourly backups should be started
 #   defaults to "". not run
@@ -60,7 +64,7 @@
 #
 # [*$::fqdn*]
 #   Is used as a name for the configuration file and within the
-#   configuration file itself to create unique files for logs etc.
+#   configuration file itself to create unique files.
 #
 # === Example
 #

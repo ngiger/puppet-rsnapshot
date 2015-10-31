@@ -66,8 +66,6 @@ Contribute
 
 * Fork the code
 * Make changes
-* Niklaus: found that  bundle exec rake spec_prep && bundle exec rake spec_standalone works better for the developer
-* rake rspec fails, but rake spec runs 22 tests.
 * Make the script command specified in .travis.yml work. E.g bundle exec rake lint && bundle exec rake spec SPEC_OPTS='--format documentation'
 * Submit changes
 
