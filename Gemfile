@@ -1,5 +1,6 @@
 source "https://rubygems.org"
 gem 'syck'
+gem 'metadata-json-lint'
 gem 'puppetlabs_spec_helper', :git => 'https://github.com/puppetlabs/puppetlabs_spec_helper.git'
 gem 'puppet-syntax'
 gem 'rspec-puppet', '2.2.0'
