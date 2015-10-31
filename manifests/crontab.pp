@@ -89,14 +89,13 @@ define rsnapshot::crontab (
   ) {
   ensure_packages(['rsync', 'rsnapshot'], {ensure => present})
 
-  notify{"custom_config ist $custom_config name $title": }
   if ($custom_config) {
-    $config_file = "$custom_config"
+    $config_file = $custom_config
     $log_file_base = "/var/log/rsnapshot/${title}"
   } else {
     $config_file =  "/etc/rsnapshot.${title}.conf"
     $log_file_base = "/var/log/rsnapshot/${title}"
-    file { "$config_file":
+    file { $config_file:
       ensure  => present,
       mode    => '0444',
       owner   => root,
