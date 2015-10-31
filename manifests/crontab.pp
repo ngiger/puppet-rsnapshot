@@ -21,10 +21,9 @@
 #
 # === Parameters
 #
-# [*name*]
-#   The name for the given configutation. The following files will be created
-#      /etc/rsnapshot/${name}.conf
-#      /etc/cron.d/rsnapshot_<name>
+# The title will be use as name for the given configutation. The following files will be created
+#      /etc/rsnapshot/${title}.conf
+#      /etc/cron.d/rsnapshot_<title>
 #
 # [*excludes*]
 #   An array of strings used to compose the *--exclude* arguments of
@@ -40,6 +39,10 @@
 # [*ionice*]
 #   Preceed the rsnapshot command with ionice to minimize impact
 #   defaults to "ionice -c3". 3 == idle
+#
+# [*$custom_config*]
+#   Use the given rsnapshot_config file.
+#   defaults to false
 #
 # [*time_hourly*]
 #   crontab time when hourly backups should be started
@@ -61,17 +64,16 @@
 #
 # [*$::fqdn*]
 #   Is used as a name for the configuration file and within the
-#   configuration file itself to create unique files for logs etc.
+#   configuration file itself to create unique files.
 #
 # === Example
 #
-#  rsnapshot::crontab{"demo_rsnapshot":
-#    name         => "etc",
+#  rsnapshot::crontab{"demo":
 #    excludes     => ['/etc/.git/'],
-#    includes     => ['/etc'], 
+#    includes     => ['/etc'],
 #    destination  => "/var/cache/backup",
 #    ionice       => "ionice -c3",
-#    time_hourly  => "15 */4", # every four hours 
+#    time_hourly  => "15 */4", # every four hours
 #    time_daily   => "15 23",  # 11 PM 15
 #    time_weekly  => "30 23",
 #    time_monthly => "45 23",
@@ -79,21 +81,25 @@
 #
 
 define rsnapshot::crontab (
-  $name     = '',
   $excludes = [],
   $includes = [], # Default is ['/'], backup everything
   $destination  = '',
   $ionice       = 'ionice -c3',
-  $time_hourly  = '',
+  $custom_config= false,
+  $time_hourly  = nil,
   $time_daily   = '30 3',
   $time_weekly  = '0  3',
   $time_monthly = '30 2',
   ) {
+  ensure_packages(['rsync', 'rsnapshot'], {ensure => present})
 
-  if ($name != '') {
-    ensure_packages(['rsync', 'rsnapshot'], {ensure => present})
-
-    file { "/etc/rsnapshot.${name}.conf":
+  if ($custom_config) {
+    $config_file = $custom_config
+    $log_file_base = "/var/log/rsnapshot/${title}"
+  } else {
+    $config_file =  "/etc/rsnapshot.${title}.conf"
+    $log_file_base = "/var/log/rsnapshot/${title}"
+    file { $config_file:
       ensure  => present,
       mode    => '0444',
       owner   => root,
@@ -102,14 +108,16 @@ define rsnapshot::crontab (
       require => Package['rsnapshot'],
       tag     => 'rsnapshot',
     }
-
-    file { "/etc/cron.d/rsnapshot_${name}":
-      ensure  => present,
-      mode    => '0444',
-      owner   => root,
-      group   => root,
-      content => template('rsnapshot/cron.d/rsnapshot_crontab.erb'),
-      require => Package['rsnapshot'],
-    }
   }
+
+  file { "/etc/cron.d/rsnapshot_${title}":
+    ensure  => present,
+    mode    => '0444',
+    owner   => root,
+    group   => root,
+    content => template('rsnapshot/cron.d/rsnapshot_crontab.erb'),
+    require => Package['rsnapshot'],
+  }
+  ensure_resource('file', ['/var/run/rsnapshot/',  '/var/log/rsnapshot/'], {ensure => directory,  mode => '0755', owner => root, group => root} )
 }
+
